@@ -1,12 +1,11 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
-
-using Microsoft.Bot.Connector;
 using Microsoft.Bot.Builder.Dialogs;
-using System.Net.Http;
+using Microsoft.Bot.Connector;
+using static BeeGraph.IoC.IoC;
 
-
-namespace Microsoft.Bot.Sample.SimpleEchoBot
+namespace BeeGraph.Editor.Dialogs
 {
     [Serializable]
     public class EchoDialog : IDialog<object>
@@ -22,6 +21,7 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
         {
             var message = await argument;
 
+            string myAnswer = Container.GetInstance<BeeGraph.Core.INodeProvider>().GetAll().First().Body;
             if (message.Text == "reset")
             {
                 PromptDialog.Confirm(
@@ -34,6 +34,7 @@ namespace Microsoft.Bot.Sample.SimpleEchoBot
             else
             {
                 await context.PostAsync($"Echo after renaming. {this.count++}: You said {message.Text}");
+                await context.PostAsync(myAnswer);
                 context.Wait(MessageReceivedAsync);
             }
         }

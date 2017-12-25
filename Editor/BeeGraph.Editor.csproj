@@ -13,8 +13,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimpleEchoBot</RootNamespace>
-    <AssemblyName>SimpleEchoBot</AssemblyName>
+    <RootNamespace>BeeGraph.Editor</RootNamespace>
+    <AssemblyName>BeeGraph.Editor</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -132,6 +132,9 @@
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="SimpleInjector, Version=4.0.12.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.4.0.12\lib\net45\SimpleInjector.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.1.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.5.1.4\lib\net451\System.IdentityModel.Tokens.Jwt.dll</HintPath>
@@ -194,6 +197,24 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BeeGraph\Core\BeeGraph.Core\BeeGraph.Core.csproj">
+      <Project>{4081a869-2bbd-462b-8377-18969f949222}</Project>
+      <Name>BeeGraph.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BeeGraph\Core\BeeGraph.Data\BeeGraph.Data.csproj">
+      <Project>{2953b160-0e84-482c-bb4f-e91a4bba82d9}</Project>
+      <Name>BeeGraph.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BeeGraph\Core\BeeGraph.Infrastructure\BeeGraph.Infrastructure.csproj">
+      <Project>{7b28acd7-b157-412e-82e8-0e5f7cb7afef}</Project>
+      <Name>BeeGraph.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BeeGraph\Core\BeeGraph.IoC\BeeGraph.IoC.csproj">
+      <Project>{b6d22ed3-70fc-4ddf-af03-02dad41c4ce2}</Project>
+      <Name>BeeGraph.IoC</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
