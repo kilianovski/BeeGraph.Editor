@@ -14,35 +14,28 @@ namespace BeeGraph.Editor.Dialogs
         private const string WelcomeMessage = "Welcome you in admin panel for your story bot";
         private const string ManageDialogOption = "Manage your dialog";
 
-        private Dictionary<string, IDialog> dialogs = new Dictionary<string, IDialog>()
+        private readonly Dictionary<string, IDialog> _dialogs = new Dictionary<string, IDialog>()
         {
-            { ManageDialogOption, DialogLocator.ManageDialog }
+            { ManageDialogOption, new ManageDialog() }
         };
 
         public async Task StartAsync(IDialogContext context)
         {
-            context.Wait(this.MessageReceivedAsync);
+            context.Wait(MessageReceivedAsync);
         }   
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             await context.PostAsync(WelcomeMessage);
-            var options = dialogs.Keys;
+            var options = _dialogs.Keys;
             PromptDialog.Choice(context, ResumeAfterMenuSelection, options,"What do you want?");
         }
 
-        private async Task ResumeAfterMenuSelection(IDialogContext context, IAwaitable<object> result)
+        private async Task ResumeAfterMenuSelection(IDialogContext context, IAwaitable<string> result)
         {
-            var answer = (await result).ToString();
-
-            if (dialogs.TryGetValue(answer, out var dialog))
-            {
-                await dialog.StartAsync(context);
-            }
-            else
-            {
-                await context.PostAsync("I cant understand you!");
-            }
+            var answer = await result;
+            var dialog = _dialogs[answer];
+            await dialog.StartAsync(context);
         }
     }
 }

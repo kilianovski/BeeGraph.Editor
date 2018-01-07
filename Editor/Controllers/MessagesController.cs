@@ -22,7 +22,7 @@ namespace BeeGraph.Editor.Controllers
             // check if activity is of type message
             if (activity != null && activity.GetActivityType() == ActivityTypes.Message)
             {
-                await Conversation.SendAsync(activity, () => DialogLocator.RootDialog);
+                await Conversation.SendAsync(activity, () => new RootDialog());
             }
             else
             {

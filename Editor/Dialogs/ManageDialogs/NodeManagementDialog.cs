@@ -15,6 +15,7 @@ namespace BeeGraph.Editor.Dialogs
         [NonSerialized]
         private INodeRepository _nodeRepository;
         private IDictionary<string, Action<IDialogContext>> _actions;
+        private Dictionary<string, Action<IDialogContext>> _actionsAfterNodeSelected;
 
         [OnDeserialized]
         private void Init(StreamingContext context)
@@ -28,6 +29,12 @@ namespace BeeGraph.Editor.Dialogs
             SetActionsAfterNodeSelected();
         }
 
+        public async Task StartAsync(IDialogContext context)
+        {
+            var options = _actions.Keys;
+            PromptDialog.Choice(context, ResumeAfterActionSelection, options, "What do you want?");
+        }
+
         private void SetActionsAfterNodeSelected()
         {
             _actionsAfterNodeSelected = _nodeRepository
@@ -36,6 +43,8 @@ namespace BeeGraph.Editor.Dialogs
                             .ToDictionary<string, string, Action<IDialogContext>>(str => str, str => ctx => EditNodeOptionSelected(str, ctx));
 
             _actionsAfterNodeSelected.Add("Go back", async ctx => await StartAsync(ctx));
+
+            string MapToViewModel(NodeEntity node) => $"{node.Id} - {node.Body}";
         }
 
         private void EditNodeOptionSelected(string nodeRepresentation, IDialogContext context)
@@ -63,8 +72,6 @@ namespace BeeGraph.Editor.Dialogs
             SetActionsAfterNodeSelected();
         }
 
-        private Dictionary<string, Action<IDialogContext>> _actionsAfterNodeSelected;
-
         private async void ListAllNodesOptionSelected(IDialogContext context)
         {
             var options = _actionsAfterNodeSelected.Keys;
@@ -77,14 +84,6 @@ namespace BeeGraph.Editor.Dialogs
             var answer = await result;
             var action = _actionsAfterNodeSelected[answer];
             action(context);
-        }
-
-        private string MapToViewModel(NodeEntity node) => $"{node.Id} - {node.Body}";
-
-        public async Task StartAsync(IDialogContext context)
-        {
-            var options = _actions.Keys;
-            PromptDialog.Choice(context, ResumeAfterActionSelection, options, "What do you want?");
         }
 
         private async Task ResumeAfterActionSelection(IDialogContext context, IAwaitable<object> result)

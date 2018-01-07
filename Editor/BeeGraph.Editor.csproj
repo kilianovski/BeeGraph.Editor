@@ -186,8 +186,6 @@
     <Compile Include="App_Start\EditorContainer.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
-    <Compile Include="DialogLocator.cs" />
-    <Compile Include="Dialogs\EchoDialog.cs" />
     <Compile Include="Dialogs\ManageDialog.cs" />
     <Compile Include="Dialogs\ManageDialogs\NodeManagementDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
