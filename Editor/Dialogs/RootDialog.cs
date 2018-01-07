@@ -12,7 +12,6 @@ namespace BeeGraph.Editor.Dialogs
     public class RootDialog : IDialog<object>
     {
         private const string WelcomeMessage = "Welcome you in admin panel for your story bot";
-
         private const string ManageDialogOption = "Manage your dialog";
 
         private Dictionary<string, IDialog> dialogs = new Dictionary<string, IDialog>()
@@ -21,6 +20,11 @@ namespace BeeGraph.Editor.Dialogs
         };
 
         public async Task StartAsync(IDialogContext context)
+        {
+            context.Wait(this.MessageReceivedAsync);
+        }
+
+        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             await context.PostAsync(WelcomeMessage);
             var options = dialogs.Keys;
