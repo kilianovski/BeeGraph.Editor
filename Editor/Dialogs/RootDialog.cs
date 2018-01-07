@@ -22,7 +22,7 @@ namespace BeeGraph.Editor.Dialogs
         public async Task StartAsync(IDialogContext context)
         {
             context.Wait(this.MessageReceivedAsync);
-        }
+        }   
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
