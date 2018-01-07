@@ -14,8 +14,14 @@ namespace BeeGraph.Editor.Dialogs
     {
         [NonSerialized]
         private INodeRepository _nodeRepository;
+
+        private const int DefaultCurrentNodeId = Int32.MinValue;
+
+        private int _currentNodeId = DefaultCurrentNodeId;
+
         private IDictionary<string, Action<IDialogContext>> _actions;
-        private Dictionary<string, Action<IDialogContext>> _actionsAfterNodeSelected;
+        private Dictionary<string, Action<IDialogContext>> _actionsForNodeSelection;
+        private Dictionary<string, Action<IDialogContext>> _actionsOnNodeEditMenu;
 
         [OnDeserialized]
         private void Init(StreamingContext context)
@@ -26,7 +32,45 @@ namespace BeeGraph.Editor.Dialogs
                 {"List all nodes", ListAllNodesOptionSelected},
                 {"Add node", AddNodeOptionSelected }
             };
+
+            _actionsOnNodeEditMenu = new Dictionary<string, Action<IDialogContext>>()
+            {
+                { "Edit this node", EditCurrentNodeOptionSelected},
+                { "Delete this node", DeleteCurrentNodeOptionSelected},
+                { "Go back",  ListAllNodesOptionSelected }
+
+            };
+
             SetActionsAfterNodeSelected();
+        }
+
+        private async void DeleteCurrentNodeOptionSelected(IDialogContext context)
+        {
+            PromptDialog.Confirm(context, ConfirmNodeDialog, "Are you sure you want delete this node?");
+        }
+
+        private async Task ConfirmNodeDialog(IDialogContext context, IAwaitable<bool> result)
+        {
+            bool isDeletionConfirmed = await result;
+            if (isDeletionConfirmed)
+            {
+                _nodeRepository.Delete(_currentNodeId);
+                SetActionsAfterNodeSelected();
+            }
+            else await context.PostAsync("OK. Returning you to the list");
+            ListAllNodesOptionSelected(context);
+        }
+
+        private async void EditCurrentNodeOptionSelected(IDialogContext context)
+        {
+
+        }
+
+        private async Task ResumeAfterEditOptionSelected(IDialogContext context, IAwaitable<string> result)
+        {
+            string option = await result;
+            var action = _actionsOnNodeEditMenu[option];
+            action(context);
         }
 
         public async Task StartAsync(IDialogContext context)
@@ -37,19 +81,25 @@ namespace BeeGraph.Editor.Dialogs
 
         private void SetActionsAfterNodeSelected()
         {
-            _actionsAfterNodeSelected = _nodeRepository
+            _actionsForNodeSelection = _nodeRepository
                             .GetAll()
-                            .Select(MapToViewModel)
-                            .ToDictionary<string, string, Action<IDialogContext>>(str => str, str => ctx => EditNodeOptionSelected(str, ctx));
+                            .Select(LabelService.GetLabel)
+                            .ToDictionary<string, string, Action<IDialogContext>>(
+                                str => str,
+                                str => ctx => EditNodeOptionSelected(str, ctx));
 
-            _actionsAfterNodeSelected.Add("Go back", async ctx => await StartAsync(ctx));
-
-            string MapToViewModel(NodeEntity node) => $"{node.Id} - {node.Body}";
+            _actionsForNodeSelection.Add("Go back", async ctx => await StartAsync(ctx));
         }
 
-        private void EditNodeOptionSelected(string nodeRepresentation, IDialogContext context)
+        private async void EditNodeOptionSelected(string nodeLabel, IDialogContext context)
         {
-            
+            _currentNodeId = LabelService.GetIdentifier(nodeLabel);
+
+            var options = _actionsOnNodeEditMenu.Keys;
+            var currentNode = _nodeRepository.Get(_currentNodeId).Value;
+
+            PromptDialog.Choice(context, ResumeAfterEditOptionSelected, options,
+                "What do you want to do with your node?\n\n" + currentNode.Body);
         }
 
         private void AddNodeOptionSelected(IDialogContext context)
@@ -74,19 +124,19 @@ namespace BeeGraph.Editor.Dialogs
 
         private async void ListAllNodesOptionSelected(IDialogContext context)
         {
-            var options = _actionsAfterNodeSelected.Keys;
-            PromptDialog.Choice(context, ResumeAfterNodeSelected, options, "What node do you want to edit?");
-            //await context.PostAsync(nodeList);
+            _currentNodeId = DefaultCurrentNodeId;
+            var options = _actionsForNodeSelection.Keys;
+            PromptDialog.Choice(context, ResumeAfterListSelected, options, "What node do you want to edit?");
         }
 
-        private async Task ResumeAfterNodeSelected(IDialogContext context, IAwaitable<string> result)
+        private async Task ResumeAfterListSelected(IDialogContext context, IAwaitable<string> result)
         {
             var answer = await result;
-            var action = _actionsAfterNodeSelected[answer];
+            var action = _actionsForNodeSelection[answer];
             action(context);
         }
 
-        private async Task ResumeAfterActionSelection(IDialogContext context, IAwaitable<object> result)
+        private async Task ResumeAfterActionSelection(IDialogContext context, IAwaitable<string> result)
         {
             var answer = (await result).ToString();
             var action = _actions[answer];
