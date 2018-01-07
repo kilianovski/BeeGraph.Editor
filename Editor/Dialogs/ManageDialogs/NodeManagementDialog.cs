@@ -25,10 +25,15 @@ namespace BeeGraph.Editor.Dialogs
                 {"List all nodes", ListAllNodesOptionSelected},
                 {"Add node", AddNodeOptionSelected }
             };
+            SetActionsAfterNodeSelected();
+        }
+
+        private void SetActionsAfterNodeSelected()
+        {
             _actionsAfterNodeSelected = _nodeRepository
-                .GetAll()
-                .Select(MapToViewModel)
-                .ToDictionary<string, string, Action<IDialogContext>>(str => str, str => ctx => EditNodeOptionSelected(str, ctx));
+                            .GetAll()
+                            .Select(MapToViewModel)
+                            .ToDictionary<string, string, Action<IDialogContext>>(str => str, str => ctx => EditNodeOptionSelected(str, ctx));
 
             _actionsAfterNodeSelected.Add("Go back", async ctx => await StartAsync(ctx));
         }
@@ -47,9 +52,15 @@ namespace BeeGraph.Editor.Dialogs
         private async Task ResumeAfterNewNodeCreated(IDialogContext context, IAwaitable<string> result)
         {
             var body = await result;
-            _nodeRepository.CreateNode(body);
+            CreateNode(body);
             await context.PostAsync("OK, node has been added!");
             ListAllNodesOptionSelected(context);
+        }
+
+        private void CreateNode(string body)
+        {
+            _nodeRepository.CreateNode(body);
+            SetActionsAfterNodeSelected();
         }
 
         private Dictionary<string, Action<IDialogContext>> _actionsAfterNodeSelected;
