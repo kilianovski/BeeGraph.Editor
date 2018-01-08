@@ -62,7 +62,7 @@ namespace BeeGraph.Editor.Dialogs
                 .Select(LabelService.GetLabel)
                 .ToDictionary<string, string, Action<IDialogContext>>(
                     str => str,
-                    str => ctx => EditNodeOptionSelected(str, ctx));
+                    str => ctx => NodeSelected(str, ctx));
 
             _actionsForNodeSelection.Add("Go back", async ctx => await StartAsync(ctx));
         }
@@ -96,7 +96,7 @@ namespace BeeGraph.Editor.Dialogs
             action(context);
         }
 
-        private async void EditNodeOptionSelected(string nodeLabel, IDialogContext context)
+        private async void NodeSelected(string nodeLabel, IDialogContext context)
         {
             _currentNodeId = LabelService.GetIdentifier(nodeLabel);
 

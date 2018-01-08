@@ -5,7 +5,10 @@ namespace BeeGraph.Editor
 {
     public static class LabelService
     {
-        public static string GetLabel(NodeEntity node) => $"[{node.Id}] - {node.Body}";
+        public static string GetLabel(NodeEntity node) => GetLabel(node.Id, node.Body);
+        public static string GetLabel(EdgeEntity edge) => GetLabel(edge.Id, edge.Key);
+
+        private static string GetLabel(object id, string body) => $"[{id}] - {body}";
 
         public static int GetIdentifier(string str)
         {

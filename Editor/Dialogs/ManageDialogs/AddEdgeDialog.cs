@@ -20,6 +20,7 @@ namespace BeeGraph.Editor.Dialogs
             repository.CreateEdge(newKey);
 
             await context.PostAsync($"New edge with the key {newKey} successfully created!");
+            DialogHelper.CallDialog<ListEdgeDialog>(context);
         }
     }
 }
