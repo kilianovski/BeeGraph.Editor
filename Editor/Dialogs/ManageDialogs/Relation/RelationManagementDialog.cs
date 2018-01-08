@@ -12,10 +12,6 @@ namespace BeeGraph.Editor.Dialogs
     public class RelationManagementDialog : IDialog
     {
         [NonSerialized]
-        private INodeRepository _nodeRepository;
-        [NonSerialized]
-        private IEdgeRepository _edgeRepository;
-        [NonSerialized]
         private INodeRelationRepository _relationRepository;
 
         private Dictionary<string, Action<IDialogContext>> _actions;
@@ -37,15 +33,15 @@ namespace BeeGraph.Editor.Dialogs
             PromptDialog.Choice(context, ResumeAfterRelationSelected, options, "Select the relation");
         }
 
-        private Task ResumeAfterRelationSelected(IDialogContext context, IAwaitable<object> result)
+        private async Task ResumeAfterRelationSelected(IDialogContext context, IAwaitable<string> result)
         {
-            throw new NotImplementedException();
+            var action = _actions[await result];
+            action(context);
         }
 
         private void Init()
         {
-            _edgeRepository = EditorContainer.Container.GetInstance<IEdgeRepository>();
-            _nodeRepository = EditorContainer.Container.GetInstance<INodeRepository>();
+
             _relationRepository = EditorContainer.Container.GetInstance<INodeRelationRepository>();
 
             _actions =
@@ -62,7 +58,16 @@ namespace BeeGraph.Editor.Dialogs
 
         private async void AddNewRelationOptionSelected(IDialogContext context)
         {
-            
+            var editDialog = new EditRelationDialog();
+            context.Call(editDialog, ResumeAfterRelationCreated);
+
+            async Task ResumeAfterRelationCreated(IDialogContext ctx, IAwaitable<RelationEditModel> result)
+            {
+                var relation = await result;
+                _relationRepository.AddRelation(relation.EdgeId, relation.FromNodeId, relation.ToNodeId);
+                Init();
+                await StartAsync(ctx);
+            }
         }
 
         private void RelationSelected(string str, IDialogContext ctx)

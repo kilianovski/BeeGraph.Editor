@@ -192,7 +192,9 @@
     <Compile Include="Dialogs\ManageDialogs\Edge\EdgeManagementDialog.cs" />
     <Compile Include="Dialogs\ManageDialogs\Edge\ListEdgeDialog.cs" />
     <Compile Include="Dialogs\ManageDialogs\NodeManagementDialog.cs" />
-    <Compile Include="Dialogs\ManageDialogs\RelationManagementDialog.cs" />
+    <Compile Include="Dialogs\ManageDialogs\Relation\EditRelationDialog.cs" />
+    <Compile Include="Dialogs\ManageDialogs\Relation\RelationEditModel.cs" />
+    <Compile Include="Dialogs\ManageDialogs\Relation\RelationManagementDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
