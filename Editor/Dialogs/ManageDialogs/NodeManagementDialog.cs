@@ -23,6 +23,10 @@ namespace BeeGraph.Editor.Dialogs
         private Dictionary<string, Action<IDialogContext>> _actionsForNodeSelection;
         private Dictionary<string, Action<IDialogContext>> _actionsOnNodeEditMenu;
 
+        public NodeManagementDialog()
+        {
+            Init(default);
+        }
         [OnDeserialized]
         private void Init(StreamingContext context)
         {
@@ -30,7 +34,8 @@ namespace BeeGraph.Editor.Dialogs
             _actions = new Dictionary<string, Action<IDialogContext>>()
             {
                 {"List all nodes", ListAllNodesOptionSelected},
-                {"Add node", AddNodeOptionSelected }
+                {"Add node", AddNodeOptionSelected },
+                {"Lets go back", DialogHelper.CallDialog<ManageDialog> }
             };
 
             _actionsOnNodeEditMenu = new Dictionary<string, Action<IDialogContext>>()
@@ -42,6 +47,24 @@ namespace BeeGraph.Editor.Dialogs
             };
 
             SetActionsAfterNodeSelected();
+        }
+
+        public async Task StartAsync(IDialogContext context)
+        {
+            var options = _actions.Keys;
+            PromptDialog.Choice(context, ResumeAfterActionSelection, options, "What do you want?");
+        }
+
+        private void SetActionsAfterNodeSelected()
+        {
+            _actionsForNodeSelection = _nodeRepository
+                .GetAll()
+                .Select(LabelService.GetLabel)
+                .ToDictionary<string, string, Action<IDialogContext>>(
+                    str => str,
+                    str => ctx => EditNodeOptionSelected(str, ctx));
+
+            _actionsForNodeSelection.Add("Go back", async ctx => await StartAsync(ctx));
         }
 
         private async void DeleteCurrentNodeOptionSelected(IDialogContext context)
@@ -71,24 +94,6 @@ namespace BeeGraph.Editor.Dialogs
             string option = await result;
             var action = _actionsOnNodeEditMenu[option];
             action(context);
-        }
-
-        public async Task StartAsync(IDialogContext context)
-        {
-            var options = _actions.Keys;
-            PromptDialog.Choice(context, ResumeAfterActionSelection, options, "What do you want?");
-        }
-
-        private void SetActionsAfterNodeSelected()
-        {
-            _actionsForNodeSelection = _nodeRepository
-                            .GetAll()
-                            .Select(LabelService.GetLabel)
-                            .ToDictionary<string, string, Action<IDialogContext>>(
-                                str => str,
-                                str => ctx => EditNodeOptionSelected(str, ctx));
-
-            _actionsForNodeSelection.Add("Go back", async ctx => await StartAsync(ctx));
         }
 
         private async void EditNodeOptionSelected(string nodeLabel, IDialogContext context)

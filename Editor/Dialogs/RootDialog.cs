@@ -9,14 +9,14 @@ using Microsoft.Bot.Connector;
 namespace BeeGraph.Editor.Dialogs
 {
     [Serializable]
-    public class RootDialog : IDialog<object>
+    public class RootDialog : IDialog
     {
         private const string WelcomeMessage = "Welcome you in admin panel for your story bot";
         private const string ManageDialogOption = "Manage your dialog";
 
-        private readonly Dictionary<string, IDialog> _dialogs = new Dictionary<string, IDialog>()
+        private readonly Dictionary<string, Action<IDialogContext>> _actions = new Dictionary<string, Action<IDialogContext>>()
         {
-            { ManageDialogOption, new ManageDialog() }
+            { ManageDialogOption, DialogHelper.CallDialog<ManageDialog> }
         };
 
         public async Task StartAsync(IDialogContext context)
@@ -27,15 +27,15 @@ namespace BeeGraph.Editor.Dialogs
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             await context.PostAsync(WelcomeMessage);
-            var options = _dialogs.Keys;
+            var options = _actions.Keys;
             PromptDialog.Choice(context, ResumeAfterMenuSelection, options,"What do you want?");
         }
 
         private async Task ResumeAfterMenuSelection(IDialogContext context, IAwaitable<string> result)
         {
             var answer = await result;
-            var dialog = _dialogs[answer];
-            await dialog.StartAsync(context);
+            var action = _actions[answer];
+            action(context);
         }
     }
 }
