@@ -15,6 +15,11 @@ namespace BeeGraph.Editor.Dialogs
         private INodeRelationRepository _relationRepository;
 
         private Dictionary<string, Action<IDialogContext>> _actions;
+        private Dictionary<string, Action<IDialogContext>> _relationActions;
+
+        private const int DefaultId = Int32.MaxValue;
+        private int _currentRelationId = DefaultId;
+
 
         [OnDeserialized]
         private void Init(StreamingContext context)
@@ -29,6 +34,7 @@ namespace BeeGraph.Editor.Dialogs
 
         public async Task StartAsync(IDialogContext context)
         {
+            _currentRelationId = DefaultId;
             var options = _actions.Keys;
             PromptDialog.Choice(context, ResumeAfterRelationSelected, options, "Select the relation");
         }
@@ -54,6 +60,19 @@ namespace BeeGraph.Editor.Dialogs
 
             _actions.Add("Add new relation", AddNewRelationOptionSelected);
 
+            _relationActions = new Dictionary<string, Action<IDialogContext>>()
+            {
+                { "Delete this relation!", DeleteRelation },
+                { "Go back!", async ctx => await StartAsync(ctx) }
+            };
+        }
+
+        private async void DeleteRelation(IDialogContext context)
+        {
+            _relationRepository.Delete(_currentRelationId);
+            //await context.PostAsync("Deleted.");
+            Init();
+            await StartAsync(context);
         }
 
         private async void AddNewRelationOptionSelected(IDialogContext context)
@@ -72,8 +91,16 @@ namespace BeeGraph.Editor.Dialogs
 
         private void RelationSelected(string str, IDialogContext ctx)
         {
-            throw new NotImplementedException();
-        }
+            _currentRelationId = LabelService.GetIdentifier(str);
 
+            var options = _relationActions.Keys;
+            PromptDialog.Choice(ctx, RelationActionSelected, options, "What to do with this relation?");
+
+            async Task RelationActionSelected(IDialogContext context, IAwaitable<string> result)
+            {
+                var action = _relationActions[await result];
+                action(context);
+            }
+        } 
     }
 }
