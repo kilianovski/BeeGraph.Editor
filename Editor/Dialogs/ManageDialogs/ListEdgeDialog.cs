@@ -51,10 +51,11 @@ namespace BeeGraph.Editor.Dialogs
             bool isDeletionConfirmed = await result;
             if (isDeletionConfirmed)
             {
-                // EditorContainer.Container.GetInstance<IEdgeRepository>().Delete(_currentEdgeId);
+                EditorContainer.Container.GetInstance<IEdgeRepository>().Delete(_currentEdgeId);
             }
             else await context.PostAsync("OK. Returning you to the list");
 
+            Init(default);
             await StartAsync(context);
         }
 
@@ -85,6 +86,7 @@ namespace BeeGraph.Editor.Dialogs
 
         public async Task StartAsync(IDialogContext context)
         {
+            _currentEdgeId = DefaultCurrentEdgeId;
             var options = _actionsForEdgeSelection.Keys;
             PromptDialog.Choice(context, ResumeAfterEdgeSelected, options, "Select the edge to edit");
         }
