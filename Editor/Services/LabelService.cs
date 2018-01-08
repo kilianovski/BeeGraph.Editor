@@ -7,6 +7,8 @@ namespace BeeGraph.Editor
     {
         public static string GetLabel(NodeEntity node) => GetLabel(node.Id, node.Body);
         public static string GetLabel(EdgeEntity edge) => GetLabel(edge.Id, edge.Key);
+        public static string GetLabel(EdgeRelationEntity rel) => 
+            GetLabel(rel.RelationId, $"{rel.FromNodeBody} --> {rel.EdgeKey} --> {rel.ToNodeBody}");
 
         private static string GetLabel(object id, string body) => $"[{id}] - {body}";
 

@@ -188,10 +188,11 @@
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\DialogHelper.cs" />
     <Compile Include="Dialogs\ManageDialog.cs" />
-    <Compile Include="Dialogs\ManageDialogs\AddEdgeDialog.cs" />
-    <Compile Include="Dialogs\ManageDialogs\EdgeManagementDialog.cs" />
-    <Compile Include="Dialogs\ManageDialogs\ListEdgeDialog.cs" />
+    <Compile Include="Dialogs\ManageDialogs\Edge\AddEdgeDialog.cs" />
+    <Compile Include="Dialogs\ManageDialogs\Edge\EdgeManagementDialog.cs" />
+    <Compile Include="Dialogs\ManageDialogs\Edge\ListEdgeDialog.cs" />
     <Compile Include="Dialogs\ManageDialogs\NodeManagementDialog.cs" />
+    <Compile Include="Dialogs\ManageDialogs\RelationManagementDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

@@ -13,6 +13,7 @@ namespace BeeGraph.Editor.Dialogs
         {
             { "Manage nodes",  CallDialog<NodeManagementDialog> },
             { "Manage edges",  CallDialog<EdgeManagementDialog>},
+            { "Manage relations", CallDialog<RelationManagementDialog> },
             { "Go back", CallDialog<RootDialog> }
         };
 
