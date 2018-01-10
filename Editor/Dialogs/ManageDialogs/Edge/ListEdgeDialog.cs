@@ -43,7 +43,7 @@ namespace BeeGraph.Editor.Dialogs
 
         private void DeleteCurrentEdge(IDialogContext context)
         {
-            PromptDialog.Confirm(context, ConfirmEdgeDeletion, "Are you sure you want delete this node?");
+            PromptDialog.Confirm(context, ConfirmEdgeDeletion, "Are you sure you want delete this EDGE?");
         }
 
         private async Task ConfirmEdgeDeletion(IDialogContext context, IAwaitable<bool> result)
