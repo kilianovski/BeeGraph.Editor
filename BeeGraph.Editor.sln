@@ -1,8 +1,20 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeeGraph.Editor", "Editor\BeeGraph.Editor.csproj", "{9C7E3A46-B60F-4052-9A21-DC8D1A942216}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{EC274F9A-91B2-4029-AF14-4EF67FED804D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeeGraph.Infrastructure", "BeeGraph\Core\BeeGraph.Infrastructure\BeeGraph.Infrastructure.csproj", "{7B28ACD7-B157-412E-82E8-0E5F7CB7AFEF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeeGraph.IoC", "BeeGraph\Core\BeeGraph.IoC\BeeGraph.IoC.csproj", "{B6D22ED3-70FC-4DDF-AF03-02DAD41C4CE2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeeGraph.Data", "BeeGraph\Core\BeeGraph.Data\BeeGraph.Data.csproj", "{2953B160-0E84-482C-BB4F-E91A4BBA82D9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeeGraph.Core", "BeeGraph\Core\BeeGraph.Core\BeeGraph.Core.csproj", "{4081A869-2BBD-462B-8377-18969F949222}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportDrawer", "ReportDrawer\ReportDrawer.csproj", "{88BF4C2C-BED7-4C2D-896C-F71169C75F13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +26,35 @@ Global
 		{9C7E3A46-B60F-4052-9A21-DC8D1A942216}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C7E3A46-B60F-4052-9A21-DC8D1A942216}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C7E3A46-B60F-4052-9A21-DC8D1A942216}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B28ACD7-B157-412E-82E8-0E5F7CB7AFEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B28ACD7-B157-412E-82E8-0E5F7CB7AFEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B28ACD7-B157-412E-82E8-0E5F7CB7AFEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B28ACD7-B157-412E-82E8-0E5F7CB7AFEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6D22ED3-70FC-4DDF-AF03-02DAD41C4CE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6D22ED3-70FC-4DDF-AF03-02DAD41C4CE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6D22ED3-70FC-4DDF-AF03-02DAD41C4CE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6D22ED3-70FC-4DDF-AF03-02DAD41C4CE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2953B160-0E84-482C-BB4F-E91A4BBA82D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2953B160-0E84-482C-BB4F-E91A4BBA82D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2953B160-0E84-482C-BB4F-E91A4BBA82D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2953B160-0E84-482C-BB4F-E91A4BBA82D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4081A869-2BBD-462B-8377-18969F949222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4081A869-2BBD-462B-8377-18969F949222}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4081A869-2BBD-462B-8377-18969F949222}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4081A869-2BBD-462B-8377-18969F949222}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88BF4C2C-BED7-4C2D-896C-F71169C75F13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88BF4C2C-BED7-4C2D-896C-F71169C75F13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88BF4C2C-BED7-4C2D-896C-F71169C75F13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88BF4C2C-BED7-4C2D-896C-F71169C75F13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7B28ACD7-B157-412E-82E8-0E5F7CB7AFEF} = {EC274F9A-91B2-4029-AF14-4EF67FED804D}
+		{B6D22ED3-70FC-4DDF-AF03-02DAD41C4CE2} = {EC274F9A-91B2-4029-AF14-4EF67FED804D}
+		{2953B160-0E84-482C-BB4F-E91A4BBA82D9} = {EC274F9A-91B2-4029-AF14-4EF67FED804D}
+		{4081A869-2BBD-462B-8377-18969F949222} = {EC274F9A-91B2-4029-AF14-4EF67FED804D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C93CCA0-3258-4A5F-AAB1-AF8042C8D8ED}

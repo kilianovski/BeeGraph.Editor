@@ -1,13 +1,14 @@
 using Autofac;
 using System.Web.Http;
-using System.Configuration;
 using System.Reflection;
+using Chronic;
 using Microsoft.Bot.Builder.Azure;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Internals;
+using Microsoft.Bot.Builder.Internals.Fibers;
 using Microsoft.Bot.Connector;
 
-namespace SimpleEchoBot
+namespace BeeGraph.Editor
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
@@ -23,11 +24,15 @@ namespace SimpleEchoBot
                     builder.RegisterModule(new AzureModule(Assembly.GetExecutingAssembly()));
 
                     // Using Azure Table Storage
-                    var store = new TableBotDataStore(ConfigurationManager.AppSettings["AzureWebJobsStorage"]); // requires Microsoft.BotBuilder.Azure Nuget package 
+                    //var store = new TableBotDataStore(ConfigurationManager.AppSettings["AzureWebJobsStorage"]); // requires Microsoft.BotBuilder.Azure Nuget package 
 
                     // To use CosmosDb or InMemory storage instead of the default table storage, uncomment the corresponding line below
                     // var store = new DocumentDbBotDataStore("cosmos db uri", "cosmos db key"); // requires Microsoft.BotBuilder.Azure Nuget package 
-                    // var store = new InMemoryDataStore(); // volatile in-memory store
+                    var store = new InMemoryDataStore(); // volatile in-memory store
+
+
+                        builder.RegisterModule(new ReflectionSurrogateModule());
+                    
 
                     builder.Register(c => store)
                         .Keyed<IBotDataStore<BotData>>(AzureModule.Key_DataStore)
